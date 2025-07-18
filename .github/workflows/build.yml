@@ -33,6 +33,49 @@ jobs:
       run: |
         # Test that the application can start and show help
         dotnet run --project src/CSRFTester.csproj -- --help || true
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: |
+        dotnet restore src/CSRFTester.csproj
+        dotnet restore tests/CSRFTester.Tests.csproj
+        
+    - name: Build
+      run: |
+        dotnet build src/CSRFTester.csproj --no-restore
+        dotnet build tests/CSRFTester.Tests.csproj --no-restore
+        
+    - name: Run tests
+      run: dotnet test tests/CSRFTester.Tests.csproj --no-build --verbosity normal
+      
+    - name: Run tests with coverage
+      run: dotnet test tests/CSRFTester.Tests.csproj --no-build --collect:"XPlat Code Coverage" --verbosity normal
+      
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      
+    - name: Generate coverage report
+      run: reportgenerator -reports:"tests/TestResults/*/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:"Html;TextSummary"
+      
+    - name: Display coverage summary
+      run: cat coverage-report/Summary.txt
+      
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage-report/
         
   security-scan:
     runs-on: ubuntu-latest
