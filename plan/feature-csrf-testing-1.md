@@ -21,6 +21,8 @@ This implementation plan establishes a console application for testing web user 
 - **REQ-006**: Application must provide clear, actionable vulnerability reports in console output
 - **REQ-007**: Support for form-based authentication and login flows
 - **REQ-008**: Application must handle JavaScript-rendered forms and AJAX submissions
+- **REQ-009**: Support for Azure Entra (Azure AD) authentication for Blazor Server applications
+- **REQ-010**: Application must handle OAuth 2.0/OpenID Connect authentication flows
 - **SEC-001**: Application must not perform destructive operations on target systems (read-only testing)
 - **SEC-002**: All browser interactions must be logged for audit purposes
 - **SEC-003**: Test credentials must be configurable and not hardcoded
@@ -63,6 +65,7 @@ This implementation plan establishes a console application for testing web user 
 | Task | Description | Completed | Date |
 |------|-------------|-----------|------|
 | TASK-009 | Create AuthenticationService class for handling login and session management in `src/Services/AuthenticationService.cs` | | |
+| TASK-009a | Extend AuthenticationService to support Azure Entra (Azure AD) OAuth 2.0/OpenID Connect flows for Blazor Server apps | | |
 | TASK-010 | Implement ResultFormatter class for generating console output and optional file reports in `src/Utils/ResultFormatter.cs` | | |
 | TASK-011 | Create logging infrastructure using ILogger interface in `src/Services/LoggingService.cs` | | |
 | TASK-012 | Implement error handling and graceful failure scenarios in `src/Utils/ErrorHandler.cs` | | |
@@ -94,6 +97,7 @@ This implementation plan establishes a console application for testing web user 
 - **DEP-005**: HtmlAgilityPack NuGet package for HTML parsing and CSRF token extraction
 - **DEP-006**: Newtonsoft.Json NuGet package for JSON response parsing and configuration
 - **DEP-007**: System.CommandLine NuGet package for robust command-line argument parsing
+- **DEP-008**: Microsoft.Identity.Client NuGet package for Azure Entra (Azure AD) authentication flows
 
 ## 5. Files
 
