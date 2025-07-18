@@ -371,6 +371,10 @@ reports/
 logs/
 *.log
 
+# Coverage reports
+coverage-report/
+tests/TestResults/
+
 # Application specific
 appsettings.local.json
 appsettings.development.json
