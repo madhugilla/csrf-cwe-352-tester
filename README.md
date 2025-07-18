@@ -16,7 +16,8 @@ This tool automatically scans web applications for CSRF vulnerabilities by:
 - **Comprehensive CSRF Detection** - Multiple attack vectors and protection mechanisms
 - **Command Line Interface** - Easy integration into CI/CD pipelines
 - **Detailed Reporting** - JSON output with vulnerability details
-- **Authentication Support** - Test authenticated and unauthenticated forms
+- **Authentication Support** - Test authenticated and unauthenticated forms (including Azure Entra)
+- **Azure Entra Integration** - Support for Blazor Server apps secured by Azure Entra (Azure AD)
 - **Headless/GUI Mode** - Visual debugging or automated testing
 
 ## Usage
@@ -29,6 +30,12 @@ CSRFTester.exe --url https://example.com/contact-form
 
 # Test with authentication
 CSRFTester.exe --url https://example.com/admin/settings --username admin --password secret
+
+# Test with Azure Entra authentication
+CSRFTester.exe --url https://example.com/blazor-app --use-entra --entra-tenant-id your-tenant-id --entra-client-id your-client-id
+
+# Test with Azure Entra and credentials for automated login
+CSRFTester.exe --url https://example.com/blazor-app --use-entra --entra-tenant-id your-tenant-id --entra-client-id your-client-id --username user@company.com --password secret
 
 # Run in headed mode (visible browser)
 CSRFTester.exe --url https://example.com/forms --headless false
@@ -45,6 +52,11 @@ CSRFTester.exe --url https://example.com/forms --output report.json
 - `--url` (required): Target web page URL to test
 - `--username`: Username for form-based authentication
 - `--password`: Password for form-based authentication
+- `--use-entra`: Use Azure Entra (Azure AD) authentication
+- `--entra-tenant-id`: Azure Entra tenant ID (required when using --use-entra)
+- `--entra-client-id`: Azure Entra client/application ID (required when using --use-entra)
+- `--entra-redirect-uri`: Azure Entra redirect URI (optional, defaults to http://localhost)
+- `--entra-scopes`: Azure Entra scopes (optional, space-separated)
 - `--headless`: Run browser in headless mode (default: true)
 - `--verbose`: Enable verbose logging
 - `--output`: Output file path for detailed JSON report
@@ -82,6 +94,31 @@ RECOMMENDATIONS:
 
 ================================================================================
 ```
+
+## Azure Entra (Azure AD) Authentication
+
+The tool supports testing Blazor Server applications secured by Azure Entra (formerly Azure AD). When using Azure Entra authentication, the tool will:
+
+1. Navigate to your Blazor application URL
+2. Detect the redirect to Azure AD login page (login.microsoftonline.com)
+3. Handle the authentication flow automatically (if credentials provided) or wait for manual login
+4. Wait for the redirect back to your application
+5. Proceed with CSRF vulnerability testing on the authenticated session
+
+### Azure Entra Usage Examples
+
+```bash
+# Test a Blazor Server app with Azure Entra (manual authentication)
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --headless false
+
+# Test with automatic Azure Entra login
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --username user@company.com --password YourPassword123
+
+# Test with custom redirect URI and scopes
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --entra-redirect-uri https://myapp.azurewebsites.net/signin-oidc --entra-scopes openid profile email
+```
+
+**Note**: When running in headless mode with Azure Entra authentication, you must provide username and password for automatic login. For manual authentication, use `--headless false` to see the browser window.
 
 ## Prerequisites
 
