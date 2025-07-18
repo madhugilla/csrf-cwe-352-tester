@@ -95,6 +95,31 @@ RECOMMENDATIONS:
 ================================================================================
 ```
 
+## Azure Entra (Azure AD) Authentication
+
+The tool supports testing Blazor Server applications secured by Azure Entra (formerly Azure AD). When using Azure Entra authentication, the tool will:
+
+1. Navigate to your Blazor application URL
+2. Detect the redirect to Azure AD login page (login.microsoftonline.com)
+3. Handle the authentication flow automatically (if credentials provided) or wait for manual login
+4. Wait for the redirect back to your application
+5. Proceed with CSRF vulnerability testing on the authenticated session
+
+### Azure Entra Usage Examples
+
+```bash
+# Test a Blazor Server app with Azure Entra (manual authentication)
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --headless false
+
+# Test with automatic Azure Entra login
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --username user@company.com --password YourPassword123
+
+# Test with custom redirect URI and scopes
+CSRFTester.exe --url https://myapp.azurewebsites.net --use-entra --entra-tenant-id 12345678-1234-1234-1234-123456789012 --entra-client-id abcdefgh-1234-1234-1234-abcdefghijkl --entra-redirect-uri https://myapp.azurewebsites.net/signin-oidc --entra-scopes openid profile email
+```
+
+**Note**: When running in headless mode with Azure Entra authentication, you must provide username and password for automatic login. For manual authentication, use `--headless false` to see the browser window.
+
 ## Prerequisites
 
 Before running the application, you need to install Playwright browsers (Microsoft Edge):
