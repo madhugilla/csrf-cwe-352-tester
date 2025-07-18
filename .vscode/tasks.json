@@ -1,0 +1,75 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build CSRF Tester",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"src/CSRFTester.csproj"
+			],
+			"group": "build",
+			"problemMatcher": [
+				"$msCompile"
+			]
+		},
+		{
+			"label": "Test CSRF - Acunetix Login",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/CSRFTester.csproj",
+				"--",
+				"--url",
+				"http://testphp.vulnweb.com/login.php",
+				"--headless",
+				"false",
+				"--verbose"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"dependsOn": "Build CSRF Tester"
+		},
+		{
+			"label": "Test CSRF - Acunetix Guestbook",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/CSRFTester.csproj",
+				"--",
+				"--url",
+				"http://testphp.vulnweb.com/guestbook.php",
+				"--headless",
+				"false",
+				"--verbose"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"dependsOn": "Build CSRF Tester"
+		},
+		{
+			"label": "Test CSRF - Altoro Bank",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"src/CSRFTester.csproj",
+				"--",
+				"--url",
+				"https://demo.testfire.net/login.jsp",
+				"--headless",
+				"false",
+				"--verbose"
+			],
+			"group": "test",
+			"problemMatcher": [],
+			"dependsOn": "Build CSRF Tester"
+		}
+	]
+}
